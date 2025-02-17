@@ -4,7 +4,7 @@
   <artifactId>E-LearningApp</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   
-  <dependencies>
+   <dependencies>
 		<dependency>
 			<groupId>io.appium</groupId>
 			<artifactId>java-client</artifactId>
@@ -43,7 +43,7 @@
             <version>3.12.0</version>
         </dependency>
 
-        <!-- ✅ (Optional) Faster JSON Processing for API tests -->
+      
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>

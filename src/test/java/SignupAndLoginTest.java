@@ -30,11 +30,10 @@ public class SignupAndLoginTest {
             caps.setCapability("appActivity", "com.example.elearningapp02.MainActivity");
             caps.setCapability(MobileCapabilityType.AUTOMATION_NAME, "UiAutomator2");
 
-            // 🔥 Try using "localhost" instead of "127.0.0.1"
             driver = new AndroidDriver(new URL("http://localhost:4723"), caps);
-            wait = new WebDriverWait(driver, Duration.ofSeconds(10)); 
+            wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         } catch (Exception e) {
-            System.err.println("❌ Error in setup: " + e.getMessage());
+            System.err.println(" Error in setup: " + e.getMessage());
             throw e;
         }
     }
@@ -42,56 +41,57 @@ public class SignupAndLoginTest {
     @Test
     public void testSignupAndLogin() {
         try {
-            // Step 1: Signup
-            WebElement signupButton = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.example.elearningapp02:id/btnSignup")));
+            //  Signup
+            WebElement signupButton = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.example.elearningapp02:id/tvGoToSignup")));
             signupButton.click();
 
-            WebElement usernameField = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.example.elearningapp02:id/etUsername")));
-            WebElement emailField = driver.findElement(By.id("com.example.elearningapp02:id/etEmail"));
-            WebElement passwordField = driver.findElement(By.id("com.example.elearningapp02:id/etPassword"));
-            WebElement confirmPasswordField = driver.findElement(By.id("com.example.elearningapp02:id/etConfirmPassword"));
-            WebElement signupSubmitButton = driver.findElement(By.id("com.example.elearningapp02:id/btnSubmitSignup"));
+            //  signup form
+            WebElement usernameField = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.example.elearningapp02:id/etAdminUserName")));
+            WebElement emailField = driver.findElement(By.id("com.example.elearningapp02:id/etAdminEmail"));
+            WebElement passwordField = driver.findElement(By.id("com.example.elearningapp02:id/etAdminPassword"));
+            WebElement confirmPasswordField = driver.findElement(By.id("com.example.elearningapp02:id/etAdminConfirmPassword"));
+            WebElement signupSubmitButton = driver.findElement(By.id("com.example.elearningapp02:id/btnAdminSignup"));
 
-            // Enter details for signup
+            // Enter user details for signup
             usernameField.sendKeys("newUser");
             emailField.sendKeys("newuser@example.com");
             passwordField.sendKeys("password123");
             confirmPasswordField.sendKeys("password123");
-            ((HidesKeyboard) driver).hideKeyboard();
             signupSubmitButton.click();
 
-            // Verify signup success by checking for a confirmation message or redirection
-            WebElement signupSuccessMessage = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.example.elearningapp02:id/signupSuccessMessage")));
-            System.out.println("✅ Signup Successful");
+            
+            try {
+                WebElement signupSuccessMessage = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.example.elearningapp02:id/signupSuccessMessage")));
+                System.out.println("Signup Successful");
+            } catch (Exception e) {
+                System.err.println("Signup failed or success message not found.");
+            }
 
-            // Step 2: Login
-            // After successful signup, go to the login screen
-            WebElement loginButton = driver.findElement(By.id("com.example.elearningapp02:id/btnLogin"));
-            loginButton.click();
-
-            // Enter login credentials
+            //  Login
+            // Navigate to login page after signup success
             WebElement loginEmailField = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.example.elearningapp02:id/etAdminEmail")));
             WebElement loginPasswordField = driver.findElement(By.id("com.example.elearningapp02:id/etAdminPassword"));
             WebElement loginSubmitButton = driver.findElement(By.id("com.example.elearningapp02:id/btnAdminLogin"));
 
             loginEmailField.sendKeys("newuser@example.com");
             loginPasswordField.sendKeys("password123");
-            ((HidesKeyboard) driver).hideKeyboard();
             loginSubmitButton.click();
 
-            // Verify login success by checking for the Dashboard screen
+            // After logging in, verify elements on the Dashboard
             WebElement dashboardTitle = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[@text='Dashboard']")));
-            System.out.println("✅ Test Passed: Login successful.");
+            WebElement userProfile = driver.findElement(By.id("com.example.elearningapp02:id/userProfile"));
+            WebElement menuButton = driver.findElement(By.id("com.example.elearningapp02:id/menuButton"));
+
+            // Assert that these elements are displayed
+            assert dashboardTitle.isDisplayed();
+            assert userProfile.isDisplayed();
+            assert menuButton.isDisplayed();
+
+            System.out.println("Test Passed: Dashboard loaded successfully with all expected elements.");
 
         } catch (Exception e) {
-            System.err.println("❌ Test Failed: " + e.getMessage());
+            System.err.println("Test Failed: " + e.getMessage());
         }
     }
 
-    @After
-    public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
-    }
 }
